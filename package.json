@@ -1,0 +1,36 @@
+{
+    "name": "voicechatbot",
+    "version": "1.0.0",
+    "description": "This discordbot allows you to enable temporary voice channels at your server",
+    "main": "bot.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node bot",
+        "run": "pm2 start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/LuciferMorningstarDev/discord-voicechatbot.git"
+    },
+    "keywords": [
+        "discordbot",
+        "voicechat",
+        "voicechat-bot",
+        "temp-voice",
+        "tempvoice"
+    ],
+    "author": "LuciferMorningstarDev",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/LuciferMorningstarDev/discord-voicechatbot/issues"
+    },
+    "homepage": "https://github.com/LuciferMorningstarDev/discord-voicechatbot#readme",
+    "dependencies": {
+        "@discordjs/rest": "^0.3.0",
+        "discord-api-types": "^0.26.1",
+        "discord.js": "^13.6.0",
+        "dotenv": "^15.0.0",
+        "enmap": "^5.8.7",
+        "mongodb": "^4.3.1"
+    }
+}
