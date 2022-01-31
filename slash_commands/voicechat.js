@@ -48,7 +48,67 @@ module.exports.run = async (bot, interaction) => {
             return interaction.reply({ content: 'No perm', ephemeral: true });
         }
 
-        return interaction.reply({ content: 'DO STH', ephemeral: true });
+        var subCommand = interaction.options.getSubcommand(true);
+
+        switch (subCommand.toLowerCase()) {
+            case 'name': {
+                var updates = 0;
+                if (channelObject?.updates != null) updates = 0 + channelObject.updates;
+                if (updates >= 1) {
+                    return interaction.reply({ content: 'Only 1 change.', ephemeral: true });
+                }
+                var name = interaction.options.getString('name');
+                if (!name || name == '') {
+                    return interaction.reply({ content: 'namevalidation.', ephemeral: true });
+                }
+                await bot.db.updateAsync('temp_voice', { channel: currentChannel.id }, { updates: updates + 1 });
+                await currentChannel.edit({
+                    name: name.slice(0, 20),
+                });
+                return interaction.reply({ content: 'name set to `' + name.slice(0, 20) + '`.', ephemeral: true });
+            }
+
+            case 'limit': {
+                var limit = interaction.options.getNumber('limit');
+                if (!limit || limit < 2 || limit > 99) {
+                    limit = 6;
+                }
+                await currentChannel.edit({
+                    userLimit: limit,
+                });
+                return interaction.reply({ content: 'size set to `' + limit + '`.', ephemeral: true });
+            }
+
+            case 'ban': {
+                var toBan = interaction.options.getMember('target');
+                if (!toBan || toBan.permissions.has('MANAGE_MESSAGES')) return interaction.reply({ content: 'remove err', ephemeral: true });
+                if (toBan.voice?.channel != null) {
+                    toBan.voice?.disconnect('Was banned from temp voice channel!');
+                }
+                await currentChannel.permissionOverwrites.edit(toBan.id, {
+                    CONNECT: false,
+                });
+                return interaction.reply({ content: 'banned', ephemeral: true });
+            }
+
+            case 'lock': {
+                await currentChannel.permissionOverwrites.edit(currentChannel.guild.id, {
+                    CONNECT: false,
+                });
+                return interaction.reply({ content: 'locked.', ephemeral: true });
+            }
+
+            case 'unlock': {
+                await currentChannel.permissionOverwrites.edit(currentChannel.guild.id, {
+                    CONNECT: true,
+                });
+                return interaction.reply({ content: 'unlocked', ephemeral: true });
+            }
+
+            default:
+                interaction.reply({ content: 'subCommand invalid', ephemeral: true });
+                return;
+        }
     } catch (error) {
         bot.error('Error in Slash Command VC', error);
     }
@@ -66,7 +126,7 @@ module.exports.data = new SlashCommandBuilder()
     .addSubcommand((subcommand) =>
         subcommand
             .setName('name')
-            .setDescription('Change the name of your channel. ( Up to 20 chars )')
+            .setDescription('Change the name of your channel. ( Up to 64 chars )')
             .addStringOption((option) => option.setName('name').setDescription('A new name for the channel').setRequired(true))
     )
     .addSubcommand((subcommand) =>
