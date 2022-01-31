@@ -56,6 +56,7 @@ module.exports.run = async (bot, interaction) => {
 
 module.exports.data = new SlashCommandBuilder()
     .setName('language')
+    .setDefaultPermission('ADMINISTRATOR')
     .setDescription('With this command you can change the server language.')
     .addStringOption((option) => option.setName('language').setDescription('the new language to set').setRequired(true));
 

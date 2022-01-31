@@ -72,6 +72,7 @@ module.exports.run = async (bot, interaction) => {
 
 module.exports.data = new SlashCommandBuilder()
     .setName('setup')
+    .setDefaultPermission('ADMINISTRATOR')
     .setDescription('Setup command for the tempvoice bot. ( Uses the joined voicechannel and parent categors of it when no arguments specified )')
     .addStringOption((option) => option.setName('lobby').setDescription('the channel id of a voice channel to join when creation of channel is needed'))
     .addStringOption((option) => option.setName('category').setDescription('the channel id of a category where created channels are moved ( lobby should be in there )'));
