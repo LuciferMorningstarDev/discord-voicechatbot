@@ -29,12 +29,34 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports.run = async (bot, interaction) => {
     const Discord = moduleRequire('discord.js');
     try {
-        return interaction.reply({ content: 'DO STH', ephemeral: true });
+        if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )' });
+        var guild = interaction.member.guild;
+
+        var guildObject = await bot.db.queryAsync('guilds', { id: guild.id });
+
+        if (!guildObject || guildObject.length < 1) return interaction.reply({ content: 'Cannot get current settings from database' });
+
+        guildObject = guildObject[0];
+
+        var currentLanguage = guildObject.language;
+
+        var languagesAvailable = Object.keys(bot.languages);
+
+        var langName = interaction.options.getString('language');
+
+        if (currentLanguage.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: 'is set' });
+        if (!languagesAvailable.includes(langName)) return interaction.reply({ content: 'not a lnng' });
+
+        bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() });
+        return interaction.reply({ content: 'set to ' + langName.toLowerCase() });
     } catch (errpr) {
         bot.error('Error in Slash Command Language', error);
     }
 };
 
-module.exports.data = new SlashCommandBuilder().setName('language').setDescription('With this command you can change the server language.');
+module.exports.data = new SlashCommandBuilder()
+    .setName('language')
+    .setDescription('With this command you can change the server language.')
+    .addStringOption((option) => option.setName('language').setDescription('the new language to set').setRequired(true));
 
 module.exports.active = true;
