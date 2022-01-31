@@ -28,13 +28,13 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction) => {
     const Discord = moduleRequire('discord.js');
-
     try {
+        return interaction.reply({ content: 'DO STH', ephemeral: true });
     } catch (errpr) {
-        bot.error('Error in Slash Command CommandName', error);
+        bot.error('Error in Slash Command Language', error);
     }
 };
 
-module.exports.data = new SlashCommandBuilder().setName('template').setDescription('this is a template command');
+module.exports.data = new SlashCommandBuilder().setName('language').setDescription('With this command you can change the server language.');
 
 module.exports.active = true;

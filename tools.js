@@ -161,7 +161,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
             for (let slash_command of bot.slash_commands.array()) slashCommands.push(slash_command.data.toJSON());
             var guildObjects = await bot.db.queryAsync('guilds', {});
             guildObjects.forEach(async (guildObjects) => {
-                await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands });
+                bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands }).catch(bot.catch);
             });
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
@@ -183,7 +183,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
                         },
                     })
                     .then(async () => {
-                        await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands });
+                        await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands }).catch(bot.catch);
                         console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
                     });
             }

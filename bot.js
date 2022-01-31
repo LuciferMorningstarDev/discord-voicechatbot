@@ -139,7 +139,6 @@ fs.readdir('./interactions/', (error, files) => {
             if (file.startsWith('_')) return;
             let props = require(`./interactions/${file}`);
             if (props.active == true) {
-                props.isCommand = true;
                 let commandName = file.split('.')[0];
                 bot.interaction_commands.set(commandName, props);
                 console.log(`[INTERACTION COMMAND LOADED] >> ${commandName}`);
@@ -159,7 +158,6 @@ fs.readdir('./slash_commands/', (error, files) => {
             if (file.startsWith('_')) return;
             let props = require(`./slash_commands/${file}`);
             if (props.active == true) {
-                props.isCommand = true;
                 let commandName = file.split('.')[0];
                 bot.slash_commands.set(commandName, props);
                 console.log(`[SLASH COMMAND LOADED] >> ${commandName}`);

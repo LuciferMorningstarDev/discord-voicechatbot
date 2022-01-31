@@ -32,3 +32,5 @@ module.exports.run = async (bot, interaction) => {
         bot.error('Error in Interaction Command CommandName', error);
     }
 };
+
+module.exports.active = true;
