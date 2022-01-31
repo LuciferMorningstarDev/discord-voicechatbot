@@ -117,7 +117,7 @@ fs.readdir('./events/', (error, files) => {
             if (!file.endsWith('.js')) return;
             const event = require(`./events/${file}`);
             let eventName = file.split('.')[0];
-            console.log(`[BOTEVENT LOADED] » ${eventName}...`);
+            console.log(`[BOTEVENT LOADED] » events.${eventName}...`);
             bot.on(eventName, event.bind(null, bot));
         } catch (error) {
             bot.error(error);
@@ -141,7 +141,7 @@ fs.readdir('./interactions/', (error, files) => {
             if (props.active == true) {
                 let commandName = file.split('.')[0];
                 bot.interaction_commands.set(commandName, props);
-                console.log(`[INTERACTION COMMAND LOADED] >> ${commandName}`);
+                console.log(`[INTERACTION COMMAND LOADED] >> interactions.${commandName}`);
             }
         } catch (error) {
             bot.error(error);
@@ -160,7 +160,7 @@ fs.readdir('./slash_commands/', (error, files) => {
             if (props.active == true) {
                 let commandName = file.split('.')[0];
                 bot.slash_commands.set(commandName, props);
-                console.log(`[SLASH COMMAND LOADED] >> ${commandName}`);
+                console.log(`[SLASH COMMAND LOADED] >> slash_commands.${commandName}`);
             }
         } catch (error) {
             bot.error(error);

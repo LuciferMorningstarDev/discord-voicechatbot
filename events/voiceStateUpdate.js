@@ -29,4 +29,37 @@ module.exports = async (bot, oldState, newState) => {
 
     let selfMember = await oldState.guild.members.fetch(bot.user.id);
     if (!selfMember.permissions.has('MANAGE_CHANNELS')) return;
+
+    var guildObject = await bot.db.queryAsync('guilds', { id: oldState.guild.id });
+    if (!guildObject || guildObject.length < 1) return;
+    guildObject = guildObject[0];
+
+    var lobby = guildObject.temp_voice.lobby;
+    var category = guildObject.temp_voice.category;
+
+    if (newState.channel && newState.channel.parent) {
+        if (newState.channel.id != lobby) return;
+        if (newState.channel.parent.id != category) return;
+        let channel = await newState.member.guild.channels.create(newState.member.displayName, {
+            type: 'GUILD_VOICE',
+        });
+        channel.setParent(category);
+        channel.setUserLimit(6);
+        newState.member.voice.setChannel(channel);
+        await bot.db.insertAsync('temp_voice', { channel: channel.id, owner: newState.member.id, updates: 0 });
+        return;
+    }
+
+    if (oldState.channel.parent?.id != category) return;
+
+    bot.channels.cache.get(category).children.forEach((channel) => {
+        if (channel.type == 'GUILD_VOICE') {
+            if (channel.id != lobby) {
+                if (channel.members.size < 1) {
+                    channel.delete('making room for new tempvoice channels');
+                    bot.db.deleteAsync('temp_voice', { channel: channel.id });
+                }
+            }
+        }
+    });
 };

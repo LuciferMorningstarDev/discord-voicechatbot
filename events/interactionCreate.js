@@ -42,7 +42,7 @@ module.exports = async (bot, interaction) => {
         var command = bot.interactions.get(interaction.customId);
         if (!command) return;
         try {
-            cmd.run(bot, interaction);
+            command.run(bot, interaction);
         } catch (err) {
             bot.error('Unhandled Error in Interaction with CustomID', err);
         }
