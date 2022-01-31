@@ -32,31 +32,48 @@ module.exports.run = async (bot, interaction) => {
         if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
         var guild = interaction.member.guild;
 
-        var guildObject = await bot.db.queryAsync('guilds', { id: guild.id });
+        var guildObject = await bot.db.queryAsync('guilds', { id: guild.id, ephemeral: true });
 
         if (!guildObject || guildObject.length < 1) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
 
         guildObject = guildObject[0];
 
-        var currentLanguage = guildObject.language;
+        var lobbyID = interaction.options.getString('lobby');
+        var categoryID = interaction.options.getString('category');
 
-        var languagesAvailable = Object.keys(bot.languages);
+        if (!lobbyID) {
+            lobbyID = interaction.member.voice?.channel?.id;
+            categoryID = interaction.member.voice?.channel?.parent?.id;
+        }
 
-        var langName = interaction.options.getString('language');
+        if (!lobbyID) return interaction.reply({ content: 'cannot setup unable to resolve channel', ephemeral: true });
 
-        if (currentLanguage.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: 'is set', ephemeral: true });
-        if (!languagesAvailable.includes(langName)) return interaction.reply({ content: 'not a lnng', ephemeral: true });
+        var lobby = await bot.channels.fetch(lobbyID).catch(() => {});
+        var category = await bot.channels.fetch(categoryID).catch(() => {});
 
-        bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() });
-        return interaction.reply({ content: 'set to ' + langName.toLowerCase(), ephemeral: true });
+        if (!lobby || !category) return interaction.reply({ content: 'cannot setup unable to resolve channel', ephemeral: true });
+
+        bot.db.updateAsync(
+            'guilds',
+            { id: guild.id },
+            {
+                temp_voice: {
+                    lobby: lobby.id,
+                    category: category.id,
+                },
+            }
+        );
+
+        return interaction.reply({ content: 'setup complete' });
     } catch (errpr) {
         bot.error('Error in Slash Command Language', error);
     }
 };
 
 module.exports.data = new SlashCommandBuilder()
-    .setName('language')
-    .setDescription('With this command you can change the server language.')
-    .addStringOption((option) => option.setName('language').setDescription('the new language to set').setRequired(true));
+    .setName('setup')
+    .setDescription('Setup command for the tempvoice bot. ( Uses the joined voicechannel and parent categors of it when no arguments specified )')
+    .addStringOption((option) => option.setName('lobby').setDescription('the channel id of a voice channel to join when creation of channel is needed'))
+    .addStringOption((option) => option.setName('category').setDescription('the channel id of a category where created channels are moved ( lobby should be in there )'));
 
 module.exports.active = true;
