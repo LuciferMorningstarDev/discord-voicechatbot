@@ -1,6 +1,8 @@
 {
     "stati": [
         ["developed by LuciferMorningstarDev", "STREAMING", "https://github.com/LuciferMorningstarDev"],
-        ["Discord VoiceChannels", "WATCHING"]
+        ["Discord VoiceChannels", "WATCHING"],
+        ["Repository: https://bit.ly/discord-voicechatbot-repo", "WATCHING"],
+        ["InviteLink: https://bit.ly/discord-voicechatbot", "WATCHING"]
     ]
 }
