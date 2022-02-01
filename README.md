@@ -22,6 +22,16 @@
 
 ---
 
+### Adding a new Language
+
+If you want to add a new Language support you can easily add a new language.json file in the `./languages/` folder. Then you can translate all of the keys.
+The files name should be in lowercase characters.
+
+-   To use the language you need to restart the bot.
+-   To set the language you can use the `/language` command.
+
+---
+
 discord-voicechatbot | Copyright (c) 2022 | [LuciferMorningstarDev](https://github.com/LuciferMorningstarDev) | Licensed under the MIT License
 
 A copy of the LICENSE should be in project folder.
