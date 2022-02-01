@@ -31,6 +31,8 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
 
     try {
+        var langData = bot.languages[lang].commandOutput.voicechat || bot.languages['en_us'].commandOutput.voicechat;
+
         var member = interaction.member;
         if (member.partial) member = await member.fetch({ cache: true });
         var currentChannel = member.voice?.channel;
@@ -119,7 +121,7 @@ module.exports.data = (bot, lang = 'en_us') => {
     var langData = bot.languages[lang].slashCommandBuilder.voicechat || bot.languages['en_us'].slashCommandBuilder.voicechat;
     var langDataSub = langData.subCommands;
     var slashCommandData = new SlashCommandBuilder()
-        .setName('voicechat')
+        .setName('vc')
         .setDescription(langData.description)
         .addSubcommand((subcommand) =>
             subcommand

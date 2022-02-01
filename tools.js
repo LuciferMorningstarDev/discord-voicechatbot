@@ -162,8 +162,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
             var guildObjects = await bot.db.queryAsync('guilds', {});
             guildObjects.forEach(async (guildObject) => {
                 for (let slash_command of bot.slash_commands.array()) {
-                    var commandData = slash_command.data(bot, guildObject.language);
-                    slashCommands.push(commandData);
+                    slashCommands.push(slash_command.data(bot, guildObject.language));
                 }
                 await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObject.id), { body: slashCommands }).catch(console.error);
             });
@@ -181,24 +180,24 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
                     category: '',
                 },
             };
-            if (!guildObject) {
-                guildObject = defaultObject;
-                bot.db.insertAsync('guilds', defaultObject).then(async () => {
-                    for (let slash_command of bot.slash_commands.array()) {
-                        var commandData = slash_command.data(bot, guildObject.language);
-                        slashCommands.push(commandData);
-                    }
-                    await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
-                    console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
-                });
-            } else {
-                for (let slash_command of bot.slash_commands.array()) {
-                    var commandData = slash_command.data(bot, guildObject.language);
-                    slashCommands.push(commandData);
-                }
-                await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
-                console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
+            if (!guildObject || guildObject.length < 1) {
+                guildObject = [
+                    {
+                        id: guildRefresh.id,
+                        language: 'en_us',
+                        temp_voice: {
+                            lobby: '',
+                            category: '',
+                        },
+                    },
+                ];
+                await bot.db.insertAsync('guilds', defaultObject[0]);
             }
+            for (let slash_command of bot.slash_commands.array()) {
+                slashCommands.push(slash_command.data(bot, guildObject[0].language));
+            }
+            await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
+            console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
         });
     }
 };

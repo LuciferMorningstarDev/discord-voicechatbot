@@ -30,8 +30,10 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
     if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
     try {
+        var langData = bot.languages[lang].commandOutput.language || bot.languages['en_us'].commandOutput.language;
+
         if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
-        var guild = interaction.member.guild;
+        var guild = interaction.guild;
 
         var languagesAvailable = Object.keys(bot.languages);
 
@@ -40,10 +42,11 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
         if (lang.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: 'is set', ephemeral: true });
         if (!languagesAvailable.includes(langName)) return interaction.reply({ content: 'not a lnng', ephemeral: true });
 
-        await bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() });
-        bot.tools.updateSlashCommands(bot, guild);
-        return interaction.reply({ content: 'set to ' + langName.toLowerCase(), ephemeral: true });
-    } catch (errpr) {
+        bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() }).then(() => {
+            bot.tools.updateSlashCommands(bot, guild);
+            return interaction.reply({ content: 'set to ' + langName.toLowerCase(), ephemeral: true });
+        });
+    } catch (error) {
         bot.error('Error in Slash Command Language', error);
     }
 };
@@ -53,8 +56,8 @@ module.exports.data = (bot, lang = 'en_us') => {
     var slashCommandData = new SlashCommandBuilder()
         .setName('language')
         .setDescription(langData.description)
-        .addStringOption((option) => option.setName('list').setDescription(langData.list))
-        .addStringOption((option) => option.setName('language').setDescription(langData.language).setRequired(true));
+        .addStringOption((option) => option.setName('language').setDescription(langData.language).setRequired(true))
+        .addStringOption((option) => option.setName('list').setDescription(langData.list));
     return slashCommandData.toJSON();
 };
 

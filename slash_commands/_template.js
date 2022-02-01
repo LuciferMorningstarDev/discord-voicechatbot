@@ -31,7 +31,7 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
 
     try {
-    } catch (errpr) {
+    } catch (error) {
         bot.error('Error in Slash Command CommandName', error);
     }
 };

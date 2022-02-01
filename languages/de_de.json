@@ -6,10 +6,10 @@
         "language": {
             "description": "Mit diesem Command stellst du die Serversprache ein.",
             "language": "Neue Sprache für den Server",
-            "list": "Ist das list Argument angegeben wird keine Sprache überschrieben aber verfügbare Sprachen aufgelistet."
+            "list": "Mit list Angabe wird keine Sprache überschrieben aber verfügbare Sprachen aufgelistet."
         },
         "setup": {
-            "description": "Setup Command des VoiceChat Bots. Wurden keine IDs angegeben wird der aktuelle Voice Kanal gesetzt.",
+            "description": "Setup Command des VoiceChat Bots. Keine IDs = aktuelle Voice Kanal Auswahl wird gesetzt.",
             "options": {
                 "lobby": "Die ID des Kanals mit dem man neue erstellen kann.",
                 "category": "Die Kategorie in der die Kanäle erstellt werden ( Lobby sollte enthalten sein. )"

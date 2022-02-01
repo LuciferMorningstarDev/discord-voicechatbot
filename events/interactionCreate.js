@@ -27,7 +27,7 @@
 const Discord = moduleRequire('discord.js');
 
 module.exports = async (bot, interaction) => {
-    var guild = interaction.member.guild;
+    var guild = interaction.guild;
     var defaultObject = {
         id: guild.id,
         language: 'en_us',
@@ -37,13 +37,14 @@ module.exports = async (bot, interaction) => {
         },
     };
     bot.db.queryAsync('guilds', { id: guild.id }).then(async (guildObject) => {
-        if (!guildObject) {
+        if (!guildObject || guildObject.length < 1) {
             await bot.db.insertAsync('guilds', defaultObject);
-            guildObject = defaultObject;
+            guildObject = [defaultObject];
         }
+        guildObject = guildObject[0];
         if (interaction.isCommand()) {
             var commandName = interaction.commandName;
-            var command = bot.slash_commands.get(commandName);
+            var command = bot.slash_commands.get(commandName == 'vc' ? 'voicechat' : commandName);
             if (!command) return;
             try {
                 command.run(bot, interaction, guildObject, guildObject.language);

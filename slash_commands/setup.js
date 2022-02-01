@@ -30,8 +30,10 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
     if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
     try {
+        var langData = bot.languages[lang].commandOutput.setup || bot.languages['en_us'].commandOutput.setup;
+
         if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
-        var guild = interaction.member.guild;
+        var guild = interaction.guild;
 
         var lobbyID = interaction.options.getString('lobby');
         var categoryID = interaction.options.getString('category');
@@ -62,7 +64,7 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
         bot.tools.updateSlashCommands(bot, guild);
 
         return interaction.reply({ content: 'setup complete' });
-    } catch (errpr) {
+    } catch (error) {
         bot.error('Error in Slash Command Language', error);
     }
 };
