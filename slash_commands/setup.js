@@ -26,8 +26,9 @@
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-module.exports.run = async (bot, interaction) => {
+module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
+    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
     try {
         if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
         var guild = interaction.member.guild;
@@ -70,11 +71,13 @@ module.exports.run = async (bot, interaction) => {
     }
 };
 
-module.exports.data = new SlashCommandBuilder()
-    .setName('setup')
-    .setDefaultPermission('ADMINISTRATOR')
-    .setDescription('Setup command for the tempvoice bot. ( Uses the joined voicechannel and parent categors of it when no arguments specified )')
-    .addStringOption((option) => option.setName('lobby').setDescription('the channel id of a voice channel to join when creation of channel is needed'))
-    .addStringOption((option) => option.setName('category').setDescription('the channel id of a category where created channels are moved ( lobby should be in there )'));
+module.exports.data = (lang = 'en_us') => {
+    var slashCommandData = new SlashCommandBuilder()
+        .setName('setup')
+        .setDescription('Setup command for the tempvoice bot. Uses Joined channel and parent category if no ID specified.')
+        .addStringOption((option) => option.setName('lobby').setDescription('the channel id of a voice channel to join when creation of channel is needed'))
+        .addStringOption((option) => option.setName('category').setDescription('the channel id of a category where created channels are moved ( lobby should be in there )'));
+    return slashCommandData.toJSON();
+};
 
 module.exports.active = true;

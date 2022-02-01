@@ -24,7 +24,7 @@
  */
 'use strict'; // https://www.w3schools.com/js/js_strict.asp
 
-module.exports.run = async (bot, interaction) => {
+module.exports.run = async (bot, interaction, lang) => {
     const Discord = moduleRequire('discord.js');
 
     try {

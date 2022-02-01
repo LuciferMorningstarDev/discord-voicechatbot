@@ -27,14 +27,18 @@
 module.exports = async (bot, guild) => {
     bot.db.queryAsync('guilds', { id: guild.id }).then((guildObjects) => {
         if (!guildObjects || guildObjects.length < 1) {
-            bot.db.insertAsync('guilds', {
-                id: guild.id,
-                language: 'en_us',
-                temp_voice: {
-                    lobby: '',
-                    category: '',
-                },
-            });
+            bot.db
+                .insertAsync('guilds', {
+                    id: guild.id,
+                    language: 'en_us',
+                    temp_voice: {
+                        lobby: '',
+                        category: '',
+                    },
+                })
+                .then(() => {
+                    bot.tools.updateSlashCommands(bot, guild);
+                });
         }
     });
 };

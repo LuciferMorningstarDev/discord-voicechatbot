@@ -27,24 +27,39 @@
 const Discord = moduleRequire('discord.js');
 
 module.exports = async (bot, interaction) => {
-    if (interaction.isCommand()) {
-        var commandName = interaction.commandName;
-        var command = bot.slash_commands.get(commandName);
-        if (!command) return;
-        try {
-            command.run(bot, interaction);
-        } catch (err) {
-            bot.error('Unhandled Error in SlashCommand', err);
+    var guild = interaction.member.id;
+    var defaultObject = {
+        id: guild.id,
+        language: 'en_us',
+        temp_voice: {
+            lobby: '',
+            category: '',
+        },
+    };
+    bot.db.queryAsync('guilds', { id: guild.id }).then(async (guildObject) => {
+        if (!guildObject || guildObject.length < 1) {
+            await bot.db.insertAsync('guilds', defaultObject);
+            guildObject = defaultObject;
         }
-        return;
-    } else {
-        if (!interaction.customId) return;
-        var command = bot.interactions.get(interaction.customId);
-        if (!command) return;
-        try {
-            command.run(bot, interaction);
-        } catch (err) {
-            bot.error('Unhandled Error in Interaction with CustomID', err);
+        if (interaction.isCommand()) {
+            var commandName = interaction.commandName;
+            var command = bot.slash_commands.get(commandName);
+            if (!command) return;
+            try {
+                command.run(bot, interaction, guildObject, guildObject.language);
+            } catch (err) {
+                bot.error('Unhandled Error in SlashCommand', err);
+            }
+            return;
+        } else {
+            if (!interaction.customId) return;
+            var command = bot.interactions.get(interaction.customId);
+            if (!command) return;
+            try {
+                command.run(bot, interaction, guildObject, guildObject.language);
+            } catch (err) {
+                bot.error('Unhandled Error in Interaction with CustomID', err);
+            }
         }
-    }
+    });
 };

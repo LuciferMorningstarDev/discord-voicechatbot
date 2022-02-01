@@ -26,7 +26,7 @@
 
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-module.exports.run = async (bot, interaction) => {
+module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
 
     try {
@@ -35,6 +35,9 @@ module.exports.run = async (bot, interaction) => {
     }
 };
 
-module.exports.data = new SlashCommandBuilder().setName('template').setDescription('this is a template command');
+module.exports.data = (lang = 'en_us') => {
+    var slashCommandData = new SlashCommandBuilder().setName('template').setDescription('this is a template command');
+    return slashCommandData.toJSON();
+};
 
 module.exports.active = true;

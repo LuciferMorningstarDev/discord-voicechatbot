@@ -154,38 +154,50 @@ module.exports.hasMemberNitro = (member) => {
 const { Routes } = moduleRequire('discord-api-types/v9');
 
 module.exports.updateSlashCommands = async (bot, guildRefresh) => {
+    var slashCommands = [];
+
     if (!guildRefresh) {
         try {
             console.log('Started refreshing application (/) commands.');
-            var slashCommands = [];
-            for (let slash_command of bot.slash_commands.array()) slashCommands.push(slash_command.data.toJSON());
             var guildObjects = await bot.db.queryAsync('guilds', {});
-            guildObjects.forEach(async (guildObjects) => {
-                bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands }).catch(bot.catch);
+            guildObjects.forEach(async (guildObject) => {
+                for (let slash_command of bot.slash_commands.array()) {
+                    var commandData = slash_command.data(guildObject.language);
+                    slashCommands.push(commandData);
+                }
+                await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObject.id), { body: slashCommands }).catch(console.error);
             });
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
             console.error(error);
         }
     } else {
-        console.log('Started refreshing application (/) commands. GUILD: ' + guildRefresh.id);
-        var slashCommands = [];
-        for (let slash_command of bot.slash_commands.array()) slashCommands.push(slash_command.data.toJSON());
-        bot.db.queryAsync('guilds', { id: guildRefresh.id }).then((guildObjects) => {
-            if (!guildObjects || guildObjects.length < 1) {
-                bot.db
-                    .insertAsync('guilds', {
-                        id: guildRefresh.id,
-                        language: 'en_us',
-                        temp_voice: {
-                            lobby: '',
-                            category: '',
-                        },
-                    })
-                    .then(async () => {
-                        await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObjects.id), { body: slashCommands }).catch(bot.catch);
-                        console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
-                    });
+        bot.db.queryAsync('guilds', { id: guildRefresh.id }).then(async (guildObject) => {
+            var defaultObject = {
+                id: guildRefresh.id,
+                language: 'en_us',
+                temp_voice: {
+                    lobby: '',
+                    category: '',
+                },
+            };
+            if (!guildObject) {
+                guildObject = defaultObject;
+                bot.db.insertAsync('guilds', defaultObject).then(async () => {
+                    for (let slash_command of bot.slash_commands.array()) {
+                        var commandData = slash_command.data(guildObject.language);
+                        slashCommands.push(commandData);
+                    }
+                    await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
+                    console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
+                });
+            } else {
+                for (let slash_command of bot.slash_commands.array()) {
+                    var commandData = slash_command.data(guildObject.language);
+                    slashCommands.push(commandData);
+                }
+                await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
+                console.log('Successfully reloaded application (/) commands. GUILD: ' + guildRefresh.id);
             }
         });
     }
