@@ -32,6 +32,10 @@ The files name should be in lowercase characters.
 
 ---
 
+If you want to have a new language supportet in [our official bot](https://bit.ly/discord-voicechatbot) create a fork / translate to a new language and then simply create a pull request. After some time and checking your request, the language will be active if everything is setup correctly.
+
+---
+
 discord-voicechatbot | Copyright (c) 2022 | [LuciferMorningstarDev](https://github.com/LuciferMorningstarDev) | Licensed under the MIT License
 
 A copy of the LICENSE should be in project folder.
