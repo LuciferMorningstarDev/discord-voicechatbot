@@ -100,7 +100,7 @@ fs.readdir('./languages/', (error, files) => {
         try {
             if (!file.endsWith('.json')) return;
             const language = require(`./languages/${file}`);
-            let langName = file.split('.')[0];
+            let langName = file.split('.')[0].toLowerCase();
             bot.languages[langName] = language;
             console.log(`[LANGUAGE LOADED] » languages.${langName}...`);
         } catch (error) {

@@ -115,30 +115,32 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     }
 };
 
-module.exports.data = (lang = 'en_us') => {
+module.exports.data = (bot, lang = 'en_us') => {
+    var langData = bot.languages[lang].slashCommandBuilder.voicechat || bot.languages['en_us'].slashCommandBuilder.voicechat;
+    var langDataSub = langData.subCommands;
     var slashCommandData = new SlashCommandBuilder()
         .setName('voicechat')
-        .setDescription('You can edit your channel with this command')
+        .setDescription(langData.description)
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('ban')
-                .setDescription('Exclude users from your channel!')
-                .addUserOption((option) => option.setName('target').setDescription('@User - The user you want to exclude.').setRequired(true))
+                .setDescription(langDataSub.ban.description)
+                .addUserOption((option) => option.setName('target').setDescription(langDataSub.ban.options.target).setRequired(true))
         )
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('name')
-                .setDescription('Change the name of your channel. ( Up to 64 chars )')
-                .addStringOption((option) => option.setName('name').setDescription('A new name for the channel').setRequired(true))
+                .setDescription(langDataSub.name.description)
+                .addStringOption((option) => option.setName('name').setDescription(langDataSub.name.options.name).setRequired(true))
         )
         .addSubcommand((subcommand) =>
             subcommand
                 .setName('limit')
-                .setDescription('Change the user limit restrictions of your channel')
-                .addNumberOption((option) => option.setName('limit').setDescription('New Limit ( 2-99 )').setRequired(true))
+                .setDescription(langDataSub.limit.description)
+                .addNumberOption((option) => option.setName('limit').setDescription(langDataSub.limit.options.limit).setRequired(true))
         )
-        .addSubcommand((subcommand) => subcommand.setName('lock').setDescription('This command makes the channel not joinable for new members'))
-        .addSubcommand((subcommand) => subcommand.setName('unlock').setDescription('This command makes the channel joinable again for new members'));
+        .addSubcommand((subcommand) => subcommand.setName('lock').setDescription(langDataSub.lock.description))
+        .addSubcommand((subcommand) => subcommand.setName('unlock').setDescription(langDataSub.unlock.description));
     return slashCommandData.toJSON();
 };
 

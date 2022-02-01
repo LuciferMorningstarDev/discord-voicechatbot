@@ -33,12 +33,6 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
         if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
         var guild = interaction.member.guild;
 
-        var guildObject = await bot.db.queryAsync('guilds', { id: guild.id, ephemeral: true });
-
-        if (!guildObject || guildObject.length < 1) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
-
-        guildObject = guildObject[0];
-
         var lobbyID = interaction.options.getString('lobby');
         var categoryID = interaction.options.getString('category');
 
@@ -65,18 +59,21 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
             }
         );
 
+        bot.tools.updateSlashCommands(bot, guild);
+
         return interaction.reply({ content: 'setup complete' });
     } catch (errpr) {
         bot.error('Error in Slash Command Language', error);
     }
 };
 
-module.exports.data = (lang = 'en_us') => {
+module.exports.data = (bot, lang = 'en_us') => {
+    var langData = bot.languages[lang].slashCommandBuilder.setup || bot.languages['en_us'].slashCommandBuilder.setup;
     var slashCommandData = new SlashCommandBuilder()
         .setName('setup')
-        .setDescription('Setup command for the tempvoice bot. Uses Joined channel and parent category if no ID specified.')
-        .addStringOption((option) => option.setName('lobby').setDescription('the channel id of a voice channel to join when creation of channel is needed'))
-        .addStringOption((option) => option.setName('category').setDescription('the channel id of a category where created channels are moved ( lobby should be in there )'));
+        .setDescription(langData.description)
+        .addStringOption((option) => option.setName('lobby').setDescription(langData.options.lobby))
+        .addStringOption((option) => option.setName('category').setDescription(langData.options.category));
     return slashCommandData.toJSON();
 };
 

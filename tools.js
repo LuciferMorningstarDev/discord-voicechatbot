@@ -162,7 +162,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
             var guildObjects = await bot.db.queryAsync('guilds', {});
             guildObjects.forEach(async (guildObject) => {
                 for (let slash_command of bot.slash_commands.array()) {
-                    var commandData = slash_command.data(guildObject.language);
+                    var commandData = slash_command.data(bot, guildObject.language);
                     slashCommands.push(commandData);
                 }
                 await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildObject.id), { body: slashCommands }).catch(console.error);
@@ -185,7 +185,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
                 guildObject = defaultObject;
                 bot.db.insertAsync('guilds', defaultObject).then(async () => {
                     for (let slash_command of bot.slash_commands.array()) {
-                        var commandData = slash_command.data(guildObject.language);
+                        var commandData = slash_command.data(bot, guildObject.language);
                         slashCommands.push(commandData);
                     }
                     await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);
@@ -193,7 +193,7 @@ module.exports.updateSlashCommands = async (bot, guildRefresh) => {
                 });
             } else {
                 for (let slash_command of bot.slash_commands.array()) {
-                    var commandData = slash_command.data(guildObject.language);
+                    var commandData = slash_command.data(bot, guildObject.language);
                     slashCommands.push(commandData);
                 }
                 await bot.restClient.put(Routes.applicationGuildCommands(bot.user.id, guildRefresh.id), { body: slashCommands }).catch(console.error);

@@ -27,7 +27,7 @@
 const Discord = moduleRequire('discord.js');
 
 module.exports = async (bot, interaction) => {
-    var guild = interaction.member.id;
+    var guild = interaction.member.guild;
     var defaultObject = {
         id: guild.id,
         language: 'en_us',
@@ -37,7 +37,7 @@ module.exports = async (bot, interaction) => {
         },
     };
     bot.db.queryAsync('guilds', { id: guild.id }).then(async (guildObject) => {
-        if (!guildObject || guildObject.length < 1) {
+        if (!guildObject) {
             await bot.db.insertAsync('guilds', defaultObject);
             guildObject = defaultObject;
         }

@@ -40,7 +40,7 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
         if (lang.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: 'is set', ephemeral: true });
         if (!languagesAvailable.includes(langName)) return interaction.reply({ content: 'not a lnng', ephemeral: true });
 
-        bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() });
+        await bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() });
         bot.tools.updateSlashCommands(bot, guild);
         return interaction.reply({ content: 'set to ' + langName.toLowerCase(), ephemeral: true });
     } catch (errpr) {
@@ -48,11 +48,13 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     }
 };
 
-module.exports.data = (lang = 'en_us') => {
+module.exports.data = (bot, lang = 'en_us') => {
+    var langData = bot.languages[lang].slashCommandBuilder.language || bot.languages['en_us'].slashCommandBuilder.language;
     var slashCommandData = new SlashCommandBuilder()
         .setName('language')
-        .setDescription('With this command you can change the server language.')
-        .addStringOption((option) => option.setName('language').setDescription('the new language to set').setRequired(true));
+        .setDescription(langData.description)
+        .addStringOption((option) => option.setName('list').setDescription(langData.list))
+        .addStringOption((option) => option.setName('language').setDescription(langData.language).setRequired(true));
     return slashCommandData.toJSON();
 };
 

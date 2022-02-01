@@ -28,6 +28,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
+    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
 
     try {
     } catch (errpr) {
@@ -35,8 +36,9 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     }
 };
 
-module.exports.data = (lang = 'en_us') => {
-    var slashCommandData = new SlashCommandBuilder().setName('template').setDescription('this is a template command');
+module.exports.data = (bot, lang = 'en_us') => {
+    var langData = bot.languages[lang].slashCommandBuilder.template || bot.languages['en_us'].slashCommandBuilder.template;
+    var slashCommandData = new SlashCommandBuilder().setName('template').setDescription(langData.description);
     return slashCommandData.toJSON();
 };
 

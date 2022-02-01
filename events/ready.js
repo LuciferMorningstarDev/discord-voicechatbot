@@ -33,5 +33,5 @@ module.exports = async (bot) => {
         bot.tools.updateStatus(bot);
     }, 120000);
 
-    bot.tools.updateSlashCommands(bot);
+    bot.tools.updateSlashCommands(bot, false);
 };

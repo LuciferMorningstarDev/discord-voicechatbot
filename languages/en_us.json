@@ -1,3 +1,53 @@
 {
-    
+    "name": "English (US)",
+    "camelID": "en_US",
+    "id": "en_us",
+    "slashCommandBuilder": {
+        "language": {
+            "description": "With this command you can change the server language.",
+            "language": "The new language to set",
+            "list": "Add argument to list available languages (if set no config get overwritten)"
+        },
+        "setup": {
+            "description": "Setup command for the temp voice bot. Uses Joined channel and parent category if no ID's specified.",
+            "options": {
+                "lobby": "The channel id of a voice channel to join when creation of channel is needed",
+                "category": "The channel id of a category where the channels are created ( the lobby should be in there )"
+            }
+        },
+        "voicechat": {
+            "description": "You can edit your channel with this command",
+            "subCommands": {
+                "ban": {
+                    "description": "Exclude users from your channel",
+                    "options": {
+                        "target": "@User - The user you want to exclude."
+                    }
+                },
+                "name": {
+                    "description": "Change the name of your channel. ( Up to 64 chars )",
+                    "options": {
+                        "name": "A new name for the channel. ( Up to 64 chars )"
+                    }
+                },
+                "limit": {
+                    "description": "Change the user limit restrictions of your channel ( 2-99 )",
+                    "options": {
+                        "limit": "New Limit ( 2-99 )"
+                    }
+                },
+                "lock": {
+                    "description": "This command prevents the channel to let in new members"
+                },
+                "unlock": {
+                    "description": "This command makes the channel joinable for new members"
+                }
+            }
+        }
+    },
+    "commandOutput": {
+        "language": {},
+        "setup": {},
+        "voicechat": {}
+    }
 }

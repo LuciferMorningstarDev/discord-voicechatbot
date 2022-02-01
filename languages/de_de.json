@@ -1,3 +1,53 @@
 {
-    
+    "name": "Deutsch (DE)",
+    "camelID": "de_DE",
+    "id": "de_de",
+    "slashCommandBuilder": {
+        "language": {
+            "description": "Mit diesem Command stellst du die Serversprache ein.",
+            "language": "Neue Sprache für den Server",
+            "list": "Ist das list Argument angegeben wird keine Sprache überschrieben aber verfügbare Sprachen aufgelistet."
+        },
+        "setup": {
+            "description": "Setup Command des VoiceChat Bots. Wurden keine IDs angegeben wird der aktuelle Voice Kanal gesetzt.",
+            "options": {
+                "lobby": "Die ID des Kanals mit dem man neue erstellen kann.",
+                "category": "Die Kategorie in der die Kanäle erstellt werden ( Lobby sollte enthalten sein. )"
+            }
+        },
+        "voicechat": {
+            "description": "Mit diesem Command kannst du deinen Kanal verwalten.",
+            "subCommands": {
+                "ban": {
+                    "description": "Entferne Benutzer aus deinem Kanal",
+                    "options": {
+                        "target": "@User - Der Benutzer der zu entfernen ist."
+                    }
+                },
+                "name": {
+                    "description": "Mit diesem Command kannst du den Namen des Kanals ändern ( Bis 64 zeichen )",
+                    "options": {
+                        "name": "Neuer Name für deinen Kanal. ( Bis 64 zeichen )"
+                    }
+                },
+                "limit": {
+                    "description": "Mit diesem Command stellst du das Benutzerlimit des Kanals ein. ( 2-99 )",
+                    "options": {
+                        "limit": "Neues Limit ( 2-99 )"
+                    }
+                },
+                "lock": {
+                    "description": "Dieser Command verhindert das joinen neuer Benutzer in deinen Kanal"
+                },
+                "unlock": {
+                    "description": "Dieser Command gibt den Kanal für neue Benutzer frei"
+                }
+            }
+        }
+    },
+    "commandOutput": {
+        "language": {},
+        "setup": {},
+        "voicechat": {}
+    }
 }
