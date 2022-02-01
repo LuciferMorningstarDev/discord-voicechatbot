@@ -46,8 +46,35 @@
         }
     },
     "commandOutput": {
-        "language": {},
-        "setup": {},
-        "voicechat": {}
+        "settings_error": "Database Error: Cannot get current settings from database.",
+        "language": {
+            "perm": "You do not have the required ADMINISTRATOR permission to use this command.",
+            "is_set": "English (US) is already set at this server.",
+            "no_lang": "The choosen language is not available. To list available run this command again with list option set to true.",
+            "set_lang": "The language has been set to `English (US) | en_us`."
+        },
+        "setup": {
+            "perm": "You do not have the required ADMINISTRATOR permission to use this command.",
+            "cannot_resolve": "Couldn't resolve Lobby and/or Category channel.",
+            "complete": "The setup is complete."
+        },
+        "voicechat": {
+            "no_channel": "You're not in a temp voice channel.",
+            "no_tmp_channel": "The channel you have entered is not a temp voice channel.",
+            "perm": "You don't have the permission to manage this channel. Needed: (CREATOR // MANAGE_CHANNELS)",
+            "invalid_sub": "Invalid SubCommand",
+            "name": {
+                "one_change": "The channel name can only be edited one time.",
+                "validation": "The name could not be verified/validated.",
+                "changed": "The channel name was set to: "
+            },
+            "limit": "The channel size was set to: ",
+            "ban": {
+                "perm": "You cannot remove this user.",
+                "banned": "You have banned the user!"
+            },
+            "lock": "The channel was locked for other users.",
+            "unlock": "The channel id free for other users now."
+        }
     }
 }

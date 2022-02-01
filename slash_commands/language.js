@@ -28,23 +28,24 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
-    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
-    try {
-        var langData = bot.languages[lang].commandOutput.language || bot.languages['en_us'].commandOutput.language;
+    var langData = bot.languages[lang].commandOutput.language || bot.languages['en_us'].commandOutput.language;
+    var settingsError = bot.languages[lang].commandOutput.settings_error || bot.languages['en_us'].commandOutput.settings_error;
 
-        if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
+    if (!settings) return interaction.reply({ content: settingsError, ephemeral: true });
+    try {
+        if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: langData.perm, ephemeral: true });
         var guild = interaction.guild;
 
         var languagesAvailable = Object.keys(bot.languages);
 
         var langName = interaction.options.getString('language');
 
-        if (lang.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: 'is set', ephemeral: true });
-        if (!languagesAvailable.includes(langName)) return interaction.reply({ content: 'not a lnng', ephemeral: true });
+        if (lang.toLowerCase() == langName.toLowerCase()) return interaction.reply({ content: langData.is_set, ephemeral: true });
+        if (!languagesAvailable.includes(langName)) return interaction.reply({ content: langData.no_lang, ephemeral: true });
 
         bot.db.updateAsync('guilds', { id: guild.id }, { language: langName.toLowerCase() }).then(() => {
             bot.tools.updateSlashCommands(bot, guild);
-            return interaction.reply({ content: 'set to ' + langName.toLowerCase(), ephemeral: true });
+            return interaction.reply({ content: langData.set_lang, ephemeral: true });
         });
     } catch (error) {
         bot.error('Error in Slash Command Language', error);

@@ -28,11 +28,12 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
-    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
-    try {
-        var langData = bot.languages[lang].commandOutput.setup || bot.languages['en_us'].commandOutput.setup;
+    var langData = bot.languages[lang].commandOutput.setup || bot.languages['en_us'].commandOutput.setup;
+    var settingsError = bot.languages[lang].commandOutput.settings_error || bot.languages['en_us'].commandOutput.settings_error;
 
-        if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: 'No perm... ( you need ADMINISTRATOR perm )', ephemeral: true });
+    if (!settings) return interaction.reply({ content: settingsError, ephemeral: true });
+    try {
+        if (!interaction.member.permissions.has('ADMINISTRATOR')) return interaction.reply({ content: langData.perm, ephemeral: true });
         var guild = interaction.guild;
 
         var lobbyID = interaction.options.getString('lobby');
@@ -43,12 +44,12 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
             categoryID = interaction.member.voice?.channel?.parent?.id;
         }
 
-        if (!lobbyID) return interaction.reply({ content: 'cannot setup unable to resolve channel', ephemeral: true });
+        if (!lobbyID) return interaction.reply({ content: langData.cannot_resolve, ephemeral: true });
 
         var lobby = await bot.channels.fetch(lobbyID).catch(() => {});
         var category = await bot.channels.fetch(categoryID).catch(() => {});
 
-        if (!lobby || !category) return interaction.reply({ content: 'cannot setup unable to resolve channel', ephemeral: true });
+        if (!lobby || !category) return interaction.reply({ content: langData.cannot_resolve, ephemeral: true });
 
         bot.db.updateAsync(
             'guilds',
@@ -63,7 +64,7 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
 
         bot.tools.updateSlashCommands(bot, guild);
 
-        return interaction.reply({ content: 'setup complete' });
+        return interaction.reply({ content: langData.complete });
     } catch (error) {
         bot.error('Error in Slash Command Language', error);
     }

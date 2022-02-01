@@ -28,27 +28,28 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
-    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
+    var langData = bot.languages[lang].commandOutput.voicechat || bot.languages['en_us'].commandOutput.voicechat;
+    var settingsError = bot.languages[lang].commandOutput.settings_error || bot.languages['en_us'].commandOutput.settings_error;
+
+    if (!settings) return interaction.reply({ content: settingsError, ephemeral: true });
 
     try {
-        var langData = bot.languages[lang].commandOutput.voicechat || bot.languages['en_us'].commandOutput.voicechat;
-
         var member = interaction.member;
         if (member.partial) member = await member.fetch({ cache: true });
         var currentChannel = member.voice?.channel;
 
         if (!currentChannel) {
-            return interaction.reply({ content: "You're not in a temp voice channel.", ephemeral: true });
+            return interaction.reply({ content: langData.no_channel, ephemeral: true });
         }
 
         var channelObject = await bot.db.queryAsync('temp_voice', { channel: currentChannel.id }).catch((err) => {});
 
-        if (!channelObject && channelObject.length < 1) return interaction.reply({ content: 'The channel you have entered is not a temp voice channel.', ephemeral: true });
+        if (!channelObject && channelObject.length < 1) return interaction.reply({ content: langData.no_tmp_channel, ephemeral: true });
 
         channelObject = channelObject[0];
 
-        if (!member.permissions.has('MANAGE_CHANNELS') && member.id != '427212136134213644' && member.id != channelObject.owner) {
-            return interaction.reply({ content: 'No perm', ephemeral: true });
+        if (!member.permissions.has('MANAGE_CHANNELS') && member.id != channelObject.owner) {
+            return interaction.reply({ content: langData.perm, ephemeral: true });
         }
 
         var subCommand = interaction.options.getSubcommand(true);
@@ -58,17 +59,17 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
                 var updates = 0;
                 if (channelObject?.updates != null) updates = 0 + channelObject.updates;
                 if (updates >= 1) {
-                    return interaction.reply({ content: 'Only 1 change.', ephemeral: true });
+                    return interaction.reply({ content: langData.name.one_change, ephemeral: true });
                 }
                 var name = interaction.options.getString('name');
                 if (!name || name == '') {
-                    return interaction.reply({ content: 'namevalidation.', ephemeral: true });
+                    return interaction.reply({ content: langData.name.validation, ephemeral: true });
                 }
                 await bot.db.updateAsync('temp_voice', { channel: currentChannel.id }, { updates: updates + 1 });
                 await currentChannel.edit({
                     name: name.slice(0, 20),
                 });
-                return interaction.reply({ content: 'name set to `' + name.slice(0, 20) + '`.', ephemeral: true });
+                return interaction.reply({ content: langData.name.changed + '`' + name.slice(0, 20) + '`.', ephemeral: true });
             }
 
             case 'limit': {
@@ -79,37 +80,37 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
                 await currentChannel.edit({
                     userLimit: limit,
                 });
-                return interaction.reply({ content: 'size set to `' + limit + '`.', ephemeral: true });
+                return interaction.reply({ content: langData.limit + '`' + limit + '`.', ephemeral: true });
             }
 
             case 'ban': {
                 var toBan = interaction.options.getMember('target');
-                if (!toBan || toBan.permissions.has('MANAGE_MESSAGES')) return interaction.reply({ content: 'remove err', ephemeral: true });
+                if (!toBan || toBan.permissions.has('MANAGE_MESSAGES')) return interaction.reply({ content: langData.ban.perm, ephemeral: true });
                 if (toBan.voice?.channel != null) {
                     toBan.voice?.disconnect('Was banned from temp voice channel!');
                 }
                 await currentChannel.permissionOverwrites.edit(toBan.id, {
                     CONNECT: false,
                 });
-                return interaction.reply({ content: 'banned', ephemeral: true });
+                return interaction.reply({ content: langData.ban.banned, ephemeral: true });
             }
 
             case 'lock': {
                 await currentChannel.permissionOverwrites.edit(currentChannel.guild.id, {
                     CONNECT: false,
                 });
-                return interaction.reply({ content: 'locked.', ephemeral: true });
+                return interaction.reply({ content: langData.lock, ephemeral: true });
             }
 
             case 'unlock': {
                 await currentChannel.permissionOverwrites.edit(currentChannel.guild.id, {
                     CONNECT: true,
                 });
-                return interaction.reply({ content: 'unlocked', ephemeral: true });
+                return interaction.reply({ content: langData.unlock, ephemeral: true });
             }
 
             default:
-                interaction.reply({ content: 'subCommand invalid', ephemeral: true });
+                interaction.reply({ content: langData.invalid_sub, ephemeral: true });
                 return;
         }
     } catch (error) {

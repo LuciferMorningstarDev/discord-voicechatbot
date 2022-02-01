@@ -28,7 +28,10 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     const Discord = moduleRequire('discord.js');
-    if (!settings) return interaction.reply({ content: 'Cannot get current settings from database', ephemeral: true });
+    var langData = bot.languages[lang].commandOutput.template || bot.languages['en_us'].commandOutput.template;
+    var settingsError = bot.languages[lang].commandOutput.settings_error || bot.languages['en_us'].commandOutput.settings_error;
+
+    if (!settings) return interaction.reply({ content: settingsError, ephemeral: true });
 
     try {
     } catch (error) {

@@ -46,8 +46,35 @@
         }
     },
     "commandOutput": {
-        "language": {},
-        "setup": {},
-        "voicechat": {}
+        "settings_error": "Database Error: Die aktuellen Einstellungen konnten nicht aus der Datenbank abgerufen werden.",
+        "language": {
+            "perm": "Dir fehlt die benütigte ADMINISTRATOR Berechtigung um diesen Command zu nutzen.",
+            "is_set": "Deutsch (DE) ist bereits eingestellt.",
+            "no_lang": "TDie gewählte Sprache ist nicht verfügbar. Um eine Auflistung verfügbarer Sprachen zu bekommen benutze den Command erneut mit der option `list = true`.",
+            "set_lang": "Die Sprache wurde auf `Deutsch (DE) | de_de` gesetzt."
+        },
+        "setup": {
+            "perm": "Dir fehlt die benütigte ADMINISTRATOR Berechtigung um diesen Command zu nutzen.",
+            "cannot_resolve": "Konnte Lobby und/oder Kategorie Kanal nicht finden.",
+            "complete": "Setup abgeschlossen."
+        },
+        "voicechat": {
+            "no_channel": "Du bist in keinem Temporären Voice Kanal.",
+            "no_tmp_channel": "Der Kanal in dem du bist ist kein Temporärer Voice Kanal.",
+            "perm": "Du hast nicht die Berechtigung dazu diesen Kanal zu verwalten. Benötigt: (ERSTELLER // MANAGE_CHANNELS)",
+            "invalid_sub": "Ungültiger SubCommand",
+            "name": {
+                "one_change": "Der Kanal Name kann nur einmal geändert werden.",
+                "validation": "Der Name konnte nicht verifiziert/validiert werden.",
+                "changed": "Der Name des Kanals wurde gesetzt auf: "
+            },
+            "limit": "Die Größe des Kanals wurde gesetzt auf: ",
+            "ban": {
+                "perm": "Diesen Benutzer kannst du nicht entfernen.",
+                "banned": "Der Benutzer wurde entfernt!"
+            },
+            "lock": "Der Kanal wurde für andere Benutzer gesperrt.",
+            "unlock": "Der Kanal ist nun für andere Benutzer freigegeben."
+        }
     }
 }
