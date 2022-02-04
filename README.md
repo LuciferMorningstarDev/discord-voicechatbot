@@ -6,6 +6,15 @@
 
 ---
 
+### Requirements
+
+-   Make sure you have nodejs >= v16.0.0 installed.
+-   You need an available [Mongo Database](https://www.mongodb.com/) as a store for active voice chat channels and guild settings. Maybe host one [here](https://www.mongodb.com/cloud/atlas/)
+
+-   if you want to use a great process manager to run your bot i would recommend [pm2](https://pm2.keymetrics.io/) ( a config for that is provided in the project )
+
+---
+
 #### Clone Repository and run the bot
 
 -   > git clone git@github.com:LuciferMorningstarDev/discord-voicechatbot.git
@@ -32,7 +41,7 @@ The files name should be in lowercase characters.
 
 ---
 
-If you want to have a new language supportet in [our official bot](https://bit.ly/discord-voicechatbot) create a fork / translate to a new language and then simply create a pull request. After some time and checking your request, the language will be active if everything is setup correctly.
+If you want to have a new language supported in [our official bot](https://bit.ly/discord-voicechatbot) create a fork / translate to a new language and then simply create a pull request. After some time and checking your request, the language will be active if everything is setup correctly.
 
 ---
 
