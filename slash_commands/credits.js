@@ -31,11 +31,11 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
     try {
         var embed = await bot.tools.generateEmbed({
             title: 'discord-voicechatbot',
-            url: 'https://bit.ly/discord-voicechatbot',
+            url: 'https://bit.ly/discord-tempvoice',
             color: 0x096069,
             thumbnail: bot.user.displayAvatarURL(),
             description: `
-[Invite](https://bit.ly/discord-voicechatbot) | [Support](https://bit.ly/discord-voicechatbot-support) | [SourceCode](https://bit.ly/discord-voicechatbot-repo)
+[Invite](https://bit.ly/discord-tempvoice) | [Support](https://bit.ly/discord-voicechatbot-support) | [SourceCode](https://bit.ly/discord-voicechatbot-repo)
 
 [Issues / Request Features](https://github.com/LuciferMorningstarDev/discord-voicechatbot/issues/new) please make sure to use the correct labels 
 
