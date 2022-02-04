@@ -37,6 +37,8 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
             description: `
 [Invite](https://bit.ly/discord-voicechatbot) | [Support](https://bit.ly/discord-voicechatbot-support) | [SourceCode](https://bit.ly/discord-voicechatbot-repo)
 
+[Issues / Request Features](https://github.com/LuciferMorningstarDev/discord-voicechatbot/issues/new) please make sure to use the correct labels 
+
 **Developed by:** [LuciferMorningstarDev](https://github.com/LuciferMorningstarDev)
             `,
             timestamp: false,
