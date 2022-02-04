@@ -1,6 +1,6 @@
 ## NodeJS Discord VoiceChat Bot COMING SOON
 
-[Invite](https://bit.ly/discord-voicechatbot) | [Dicordserver / Support](https://bit.ly/discord-voicechatbot-support) | [SourceCode](https://bit.ly/discord-voicechatbot-repo)
+[Invite](https://bit.ly/discord-tempvoice) | [Dicordserver / Support](https://bit.ly/discord-voicechatbot-support) | [SourceCode](https://bit.ly/discord-voicechatbot-repo)
 
 #### This discordbot allows you to enable temporary voice channels at your server
 
@@ -41,7 +41,7 @@ The files name should be in lowercase characters.
 
 ---
 
-If you want to have a new language supported in [our official bot](https://bit.ly/discord-voicechatbot) create a fork / translate to a new language and then simply create a pull request. After some time and checking your request, the language will be active if everything is setup correctly.
+If you want to have a new language supported in [our official bot](https://bit.ly/discord-tempvoice) create a fork / translate to a new language and then simply create a pull request. After some time and checking your request, the language will be active if everything is setup correctly.
 
 ---
 
