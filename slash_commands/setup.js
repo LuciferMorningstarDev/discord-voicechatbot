@@ -44,7 +44,7 @@ module.exports.run = async (bot, interaction, settings, lang = 'en_us') => {
             categoryID = interaction.member.voice?.channel?.parent?.id;
         }
 
-        if (!lobbyID) return interaction.reply({ content: langData.cannot_resolve, ephemeral: true });
+        if (!lobbyID || !categoryID) return interaction.reply({ content: langData.cannot_resolve, ephemeral: true });
 
         var lobby = await bot.channels.fetch(lobbyID).catch(() => {});
         var category = await bot.channels.fetch(categoryID).catch(() => {});

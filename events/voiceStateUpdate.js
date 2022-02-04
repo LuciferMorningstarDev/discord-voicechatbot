@@ -43,9 +43,9 @@ module.exports = async (bot, oldState, newState) => {
         let channel = await newState.member.guild.channels.create(newState.member.displayName, {
             type: 'GUILD_VOICE',
         });
-        channel.setParent(category);
         channel.setUserLimit(6);
-        newState.member.voice.setChannel(channel);
+        await channel.setParent(category);
+        await newState.member.voice.setChannel(channel);
         await bot.db.insertAsync('temp_voice', { channel: channel.id, owner: newState.member.id, updates: 0 });
         return;
     }
